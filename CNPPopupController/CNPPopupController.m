@@ -250,7 +250,8 @@ CGFloat CNP_UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orie
         CGRect maskViewIntersection = CGRectIntersection(self.maskView.frame, keyboardFrame);
         
         [UIView animateWithDuration:duration delay:0.0f options:options animations:^{
-            self.popupView.center = CGPointMake(self.popupView.center.x, (CGRectGetHeight(self.maskView.frame) - maskViewIntersection.size.height) / 2);
+            // self.popupView.center = CGPointMake(self.popupView.center.x, (CGRectGetHeight(self.maskView.frame) - maskViewIntersection.size.height) / 2);
+            self.maskView.center = CGPointMake(self.maskView.center.x, (CGRectGetHeight(self.maskView.frame)) / 3.314);
         } completion:nil];
     }
 }
@@ -270,7 +271,10 @@ CGFloat CNP_UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orie
 - (void)keyboardWithStartFrame:(CGRect)keyboardFrame willHideAfterDuration:(NSTimeInterval)duration withOptions:(UIViewAnimationOptions)options
 {
     [UIView animateWithDuration:duration delay:0.0f options:options animations:^{
-        self.popupView.center = [self endingPoint];
+        // self.popupView.center = [self endingPoint];
+        
+        // modified code to keep touch gesture
+        self.maskView.center = CGPointMake(self.maskView.center.x, (CGRectGetHeight(self.maskView.frame)/2));
     } completion:nil];
 }
 
@@ -396,6 +400,9 @@ CGFloat CNP_UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orie
     if (self.theme.shouldDismissOnBackgroundTouch) {
         [self.popupView endEditing:YES];
         [self dismissPopupControllerAnimated:self.dismissAnimated];
+        dispatch_async(dispatch_get_main_queue(),^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"PopUpTapOut" object:nil];
+        });
     }
 }
 
